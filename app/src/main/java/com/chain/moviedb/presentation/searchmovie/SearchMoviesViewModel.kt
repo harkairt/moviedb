@@ -9,41 +9,56 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchMoviesViewModel @Inject constructor(private val searchMoviesUseCase: SearchMoviesUseCase) : DisposingViewModel() {
+class SearchMoviesViewModel @Inject constructor(private val searchMoviesUseCase: SearchMoviesUseCase) :
+    DisposingViewModel() {
 
-    private val _movieSearchResult: MutableLiveData<MovieSearchResult> = MutableLiveData()
-    val movieSearchResult: LiveData<MovieSearchResult> = _movieSearchResult
+    private val _movieSearchState: MutableLiveData<MovieSearchState> = MutableLiveData()
+    val movieSearchState: LiveData<MovieSearchState> = _movieSearchState
+
+    private val _loadingInProgress: MutableLiveData<Boolean> = MutableLiveData()
+    val loadingInProgress: LiveData<Boolean> = _loadingInProgress
 
     fun search(query: String) {
+        _loadingInProgress.postValue(true)
+
         searchMoviesUseCase.searchMovies(query)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    _movieSearchResult.postValue(MovieSearchResult.success(it))
-                }, {
-                    _movieSearchResult.postValue(MovieSearchResult.error())
-                }
-                ).disposeOnCleared()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally {
+                _loadingInProgress.postValue(false)
+            }
+            .subscribe({
+                _movieSearchState.postValue(MovieSearchState.success(it))
+            }, {
+                _movieSearchState.postValue(MovieSearchState.error())
+            }
+            ).disposeOnCleared()
     }
 
 }
 
-enum class MovieSearchResultType {
-    SUCCESS,
+enum class MovieSearchStateType {
+    SUCCESSFULLY_LOADED,
     EMPTY,
+    LOADING_IN_PROGRESS,
     ERROR
 }
 
-class MovieSearchResult private constructor(val movieSearchResultType: MovieSearchResultType, val movieList: List<Movie> = listOf()) {
+class MovieSearchState private constructor(
+        val movieSearchStateType: MovieSearchStateType,
+        val movieList: List<Movie> = listOf()
+) {
     companion object {
 
-        fun success(movieList: List<Movie>): MovieSearchResult {
+        fun success(movieList: List<Movie>): MovieSearchState {
             return if (movieList.any())
-                MovieSearchResult(MovieSearchResultType.SUCCESS, movieList)
+                MovieSearchState(MovieSearchStateType.SUCCESSFULLY_LOADED, movieList)
             else
-                MovieSearchResult(MovieSearchResultType.EMPTY)
+                MovieSearchState(MovieSearchStateType.EMPTY)
         }
 
-        fun error() = MovieSearchResult(MovieSearchResultType.ERROR)
+        fun error() = MovieSearchState(MovieSearchStateType.ERROR)
+
+        fun loading() = MovieSearchState(MovieSearchStateType.LOADING_IN_PROGRESS)
     }
 }

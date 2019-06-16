@@ -1,6 +1,8 @@
 package com.chain.moviedb.presentation.common
 
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,4 +15,11 @@ fun <T> setData(recyclerView: RecyclerView, data: T) {
 
     if (recyclerView.adapter is BindableAdapter<*>)
         (recyclerView.adapter as BindableAdapter<T>).bindData(data)
+}
+
+
+@BindingAdapter("in_progress")
+fun <T> setInProgress(progressBar: ProgressBar, inProgress: Boolean) {
+    progressBar.visibility = if (inProgress) View.VISIBLE else View.INVISIBLE
+
 }
