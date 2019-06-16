@@ -13,7 +13,7 @@ class ServiceModule {
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://api.themoviedb.org/3/")
+            .baseUrl("https://api.themoviedb.org/3/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
