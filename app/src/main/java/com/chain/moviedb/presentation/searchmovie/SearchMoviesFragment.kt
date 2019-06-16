@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.chain.moviedb.di.ViewModelFactory
 import com.chain.moviedb.domain.entities.Movie
 import com.chain.moviedb.presentation.common.BaseFragment
 import com.chain.moviedb.presentation.common.onQueryTextSubmitted
+import com.chain.moviedb.util.movieIdKey
 import javax.inject.Inject
 
 class SearchMoviesFragment : BaseFragment(){
@@ -36,7 +38,11 @@ class SearchMoviesFragment : BaseFragment(){
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = searchMoviesViewModel
 
-        setupRecyclerView(binding.root)
+        setupRecyclerView(binding.root){
+            findNavController().navigate(R.id.movieDetailsNavigationAction, Bundle().apply {
+                putInt(movieIdKey, it.id)
+            })
+        }
 
         val searchView: SearchView = binding.root.findViewById(R.id.moviesSearchView)
         searchView.onQueryTextSubmitted {

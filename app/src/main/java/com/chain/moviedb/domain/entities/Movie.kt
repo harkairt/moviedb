@@ -7,5 +7,8 @@ data class Movie(
     val vote_count: Int,
     val overview: String,
     val budget: Int,
-    val poster_path: String
+    val poster_path: String,
+    val release_date: String?,
+    val revenue: Int?,
+    val runtime: Int?
 )

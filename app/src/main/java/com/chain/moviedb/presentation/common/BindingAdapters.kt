@@ -2,9 +2,12 @@ package com.chain.moviedb.presentation.common
 
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.chain.moviedb.util.posterBasePath
+import com.squareup.picasso.Picasso
 
 @BindingAdapter("data")
 fun <T> setData(recyclerView: RecyclerView, data: T) {
@@ -22,4 +25,14 @@ fun <T> setData(recyclerView: RecyclerView, data: T) {
 fun <T> setInProgress(progressBar: ProgressBar, inProgress: Boolean) {
     progressBar.visibility = if (inProgress) View.VISIBLE else View.INVISIBLE
 
+}
+
+@BindingAdapter("posterPath")
+fun <T> loadPosterImage(imageView: ImageView, posterPath: String?) {
+    posterPath?.let {nonNullPosterPath ->
+        Picasso.get()
+                .load("$posterBasePath$nonNullPosterPath")
+                .fit()
+                .into(imageView)
+    }
 }

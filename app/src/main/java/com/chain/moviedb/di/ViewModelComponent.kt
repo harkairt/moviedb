@@ -2,6 +2,7 @@ package com.chain.moviedb.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.chain.moviedb.presentation.moviedetail.MovieDetailViewModel
 import com.chain.moviedb.presentation.searchmovie.SearchMoviesViewModel
 import dagger.Binds
 import dagger.Component
@@ -46,5 +47,10 @@ interface ViewModelModule{
     @IntoMap
     @ViewModelKey(SearchMoviesViewModel::class)
     fun bindSearchMoviesViewModel(viewModel: SearchMoviesViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MovieDetailViewModel::class)
+    fun bindMovieDetailViewModel(viewModel: MovieDetailViewModel) : ViewModel
 
 }

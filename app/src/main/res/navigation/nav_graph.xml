@@ -8,6 +8,18 @@
     <fragment
         android:id="@+id/searchMoviesFragment"
         android:name="com.chain.moviedb.presentation.searchmovie.SearchMoviesFragment"
-        tools:layout="@layout/search_movies_fragment"
-        android:label="SearchMoviesFragment" />
+        android:label="SearchMoviesFragment"
+        tools:layout="@layout/search_movies_fragment">
+        <action
+            android:id="@+id/movieDetailsNavigationAction"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.chain.moviedb.presentation.moviedetail.MovieDetailFragment"
+        android:label="MovieDetailFragment">
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
