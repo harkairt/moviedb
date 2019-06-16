@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="movie"
+            type="com.chain.moviedb.domain.entities.Movie" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/moviePosterView"
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/movieTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="@{movie.title}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/moviePosterView"
+            app:layout_constraintTop_toTopOf="@+id/moviePosterView"
+            tools:text="The Matrix" />
+
+        <TextView
+            android:id="@+id/movieBudgetTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="BUDGET"
+            app:layout_constraintStart_toStartOf="@+id/movieTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/movieTitleTextView"
+            tools:text="Budget: $63.000.000" />
+
+        <TextView
+            android:id="@+id/movieRateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@{Double.toString(movie.vote_average) + `/10 (` + Integer.toString(movie.vote_count) + ` votes)`}"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@+id/moviePosterView"
+            app:layout_constraintStart_toStartOf="@+id/movieTitleTextView"
+            tools:text="8.1/10 (14422 votes)" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,6 +1,7 @@
 package com.chain.moviedb.di
 
 import com.chain.moviedb.MainActivity
+import com.chain.moviedb.presentation.searchmovie.SearchMoviesFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -8,4 +9,5 @@ import javax.inject.Singleton
 @Component(dependencies = [ViewModelComponent::class])
 interface ApplicationComponent {
     fun injectInto(mainActivity: MainActivity)
+    fun injectInto(searchMoviesFragment: SearchMoviesFragment)
 }
