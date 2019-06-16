@@ -4,8 +4,10 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.chain.moviedb.presentation.searchmovie.MovieSearchStateType
 import com.chain.moviedb.util.posterBasePath
 import com.squareup.picasso.Picasso
 
@@ -29,10 +31,22 @@ fun <T> setInProgress(progressBar: ProgressBar, inProgress: Boolean) {
 
 @BindingAdapter("posterPath")
 fun <T> loadPosterImage(imageView: ImageView, posterPath: String?) {
-    posterPath?.let {nonNullPosterPath ->
+    posterPath?.let { nonNullPosterPath ->
         Picasso.get()
                 .load("$posterBasePath$nonNullPosterPath")
                 .fit()
                 .into(imageView)
     }
+}
+
+@BindingAdapter("searchState")
+fun <T> notifyAboutState(textView: TextView, searchState: MovieSearchStateType?) {
+    searchState?.let {
+        textView.text = when (searchState) {
+            MovieSearchStateType.EMPTY -> "No results found."
+            MovieSearchStateType.ERROR -> "Something went wrong. :("
+            else -> ""
+        }
+    }
+
 }
