@@ -26,7 +26,9 @@ annotation class ViewModelKey(val value : KClass<out ViewModel>)
 
 @Component(modules = [
     ViewModelModule::class,
-    ContextModule::class
+    ContextModule::class,
+    ServiceModule::class,
+    RepositoryBindingModule::class
 ])
 interface ViewModelComponent{
     fun viewModelProviders() : Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
