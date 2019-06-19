@@ -23,14 +23,14 @@ fun <T> setData(recyclerView: RecyclerView, data: T) {
 }
 
 
-@BindingAdapter("in_progress")
-fun <T> setInProgress(progressBar: ProgressBar, inProgress: Boolean) {
+@BindingAdapter("inProgress")
+fun setInProgress(progressBar: ProgressBar, inProgress: Boolean) {
     progressBar.visibility = if (inProgress) View.VISIBLE else View.INVISIBLE
 
 }
 
 @BindingAdapter("posterPath")
-fun <T> loadPosterImage(imageView: ImageView, posterPath: String?) {
+fun loadPosterImage(imageView: ImageView, posterPath: String?) {
     posterPath?.let { nonNullPosterPath ->
         Picasso.get()
                 .load("$posterBasePath$nonNullPosterPath")
@@ -40,7 +40,7 @@ fun <T> loadPosterImage(imageView: ImageView, posterPath: String?) {
 }
 
 @BindingAdapter("searchState")
-fun <T> notifyAboutState(textView: TextView, searchState: MovieSearchStateType?) {
+fun setTextBasedOnResultType(textView: TextView, searchState: MovieSearchStateType?) {
     searchState?.let {
         textView.text = when (searchState) {
             MovieSearchStateType.EMPTY -> "No results found."

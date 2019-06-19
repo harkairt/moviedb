@@ -12,25 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chain.moviedb.Injector
 import com.chain.moviedb.R
 import com.chain.moviedb.databinding.SearchMoviesFragmentBinding
-import com.chain.moviedb.di.ViewModelFactory
 import com.chain.moviedb.domain.entities.Movie
 import com.chain.moviedb.presentation.common.BaseFragment
 import com.chain.moviedb.presentation.common.onQueryTextSubmitted
 import com.chain.moviedb.util.movieIdKey
-import javax.inject.Inject
 
-class SearchMoviesFragment : BaseFragment(){
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+class SearchMoviesFragment : BaseFragment() {
 
     private val searchMoviesViewModel: SearchMoviesViewModel by lazy {
+        val viewModelFactory = Injector.get().viewModelFactory()
         viewModelFactory.getFragmentScopedViewModel(SearchMoviesViewModel::class)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Injector.get().injectInto(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,35 +29,41 @@ class SearchMoviesFragment : BaseFragment(){
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = searchMoviesViewModel
 
-        setupRecyclerView(binding.root){
-            findNavController().navigate(R.id.movieDetailsNavigationAction, Bundle().apply {
-                putInt(movieIdKey, it.id)
-            })
-        }
-
-        val searchView: SearchView = binding.root.findViewById(R.id.moviesSearchView)
-        searchView.onQueryTextSubmitted {
-            searchMoviesViewModel.search(it)
-        }
+        setupSearchView(binding.root, onSearch = searchMoviesViewModel::search)
+        setupMoviesRecyclerView(binding.root, onClick = ::navigateToDetail)
 
         return binding.root
     }
 
 
-    private fun setupRecyclerView(root: View, onItemClick: ((Movie) -> Unit) = {}) {
+    private fun setupSearchView(root: View, onSearch: (String) -> Unit) {
+        val searchView: SearchView = root.findViewById(R.id.moviesSearchView)
+        searchView.onQueryTextSubmitted {
+            onSearch.invoke(it)
+        }
+    }
+
+    private fun setupMoviesRecyclerView(root: View, onClick: (Movie) -> Unit) {
         root.findViewById<RecyclerView>(R.id.movieSearchResultRecyclerView).run {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@SearchMoviesFragment.context)
-            adapter = MovieAdapter().apply {
-                clickEvents.subscribe { onItemClick(it) }.disposeOnDestroy()
+            adapter = MovieAdapter {
+                onClickAction = onClick
             }
             addItemDecoration(
-                    DividerItemDecoration(
-                            this@SearchMoviesFragment.context,
-                            DividerItemDecoration.VERTICAL
-                    )
+                DividerItemDecoration(
+                    this@SearchMoviesFragment.context,
+                    DividerItemDecoration.VERTICAL
+                )
             )
         }
     }
+
+    private fun navigateToDetail(it: Movie) {
+        findNavController().navigate(R.id.movieDetailsNavigationAction, Bundle().apply {
+            putInt(movieIdKey, it.id)
+        })
+    }
+
 
 }

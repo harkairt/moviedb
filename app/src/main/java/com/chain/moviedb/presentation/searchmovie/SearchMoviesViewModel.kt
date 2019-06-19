@@ -38,9 +38,8 @@ class SearchMoviesViewModel @Inject constructor(private val searchMoviesUseCase:
 }
 
 enum class MovieSearchStateType {
-    SUCCESSFULLY_LOADED,
+    SUCCESS,
     EMPTY,
-    LOADING_IN_PROGRESS,
     ERROR
 }
 
@@ -49,16 +48,16 @@ class MovieSearchState private constructor(
         val movieList: List<Movie> = listOf()
 ) {
     companion object {
+        private val emptySearchResultState = MovieSearchState(MovieSearchStateType.EMPTY)
+        private val errorSearchResultState = MovieSearchState(MovieSearchStateType.ERROR)
 
         fun success(movieList: List<Movie>): MovieSearchState {
             return if (movieList.any())
-                MovieSearchState(MovieSearchStateType.SUCCESSFULLY_LOADED, movieList)
+                MovieSearchState(MovieSearchStateType.SUCCESS, movieList)
             else
-                MovieSearchState(MovieSearchStateType.EMPTY)
+                emptySearchResultState
         }
 
-        fun error() = MovieSearchState(MovieSearchStateType.ERROR)
-
-        fun loading() = MovieSearchState(MovieSearchStateType.LOADING_IN_PROGRESS)
+        fun error() = errorSearchResultState
     }
 }

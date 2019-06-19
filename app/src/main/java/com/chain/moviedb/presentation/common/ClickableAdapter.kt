@@ -2,12 +2,18 @@ package com.chain.moviedb.presentation.common
 
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 abstract class ClickableAdapter<VH, T> : RecyclerView.Adapter<VH>() where VH : RecyclerView.ViewHolder {
     private val clickSubject = PublishSubject.create<T>()
-    val clickEvents: Observable<T> = clickSubject
+
+    lateinit var onClickAction: (T) -> Unit
+
+    init {
+        clickSubject.subscribe {
+            onClickAction(it)
+        }
+    }
 
     abstract fun getDataSource(): List<T>
 
