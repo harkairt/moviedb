@@ -7,7 +7,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.chain.moviedb.presentation.searchmovie.MovieSearchStateType
+import com.chain.moviedb.presentation.searchmovie.ResultType
 import com.chain.moviedb.util.posterBasePath
 import com.squareup.picasso.Picasso
 
@@ -40,11 +40,11 @@ fun loadPosterImage(imageView: ImageView, posterPath: String?) {
 }
 
 @BindingAdapter("searchState")
-fun setTextBasedOnResultType(textView: TextView, searchState: MovieSearchStateType?) {
+fun setTextBasedOnResultType(textView: TextView, searchState: ResultType?) {
     searchState?.let {
         textView.text = when (searchState) {
-            MovieSearchStateType.EMPTY -> "No results found."
-            MovieSearchStateType.ERROR -> "Something went wrong. :("
+            ResultType.EMPTY-> "No results found."
+            ResultType.ERROR -> "Something went wrong. :("
             else -> ""
         }
     }

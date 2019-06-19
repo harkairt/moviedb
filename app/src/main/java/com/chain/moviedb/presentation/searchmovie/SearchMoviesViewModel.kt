@@ -12,8 +12,8 @@ import javax.inject.Inject
 class SearchMoviesViewModel @Inject constructor(private val searchMoviesUseCase: SearchMoviesUseCase) :
     DisposingViewModel() {
 
-    private val _movieSearchState: MutableLiveData<MovieSearchState> = MutableLiveData()
-    val movieSearchState: LiveData<MovieSearchState> = _movieSearchState
+    private val _movieSearchResult: MutableLiveData<MovieSearchResult> = MutableLiveData()
+    val movieSearchResult: LiveData<MovieSearchResult> = _movieSearchResult
 
     private val _loadingInProgress: MutableLiveData<Boolean> = MutableLiveData()
     val loadingInProgress: LiveData<Boolean> = _loadingInProgress
@@ -28,36 +28,33 @@ class SearchMoviesViewModel @Inject constructor(private val searchMoviesUseCase:
                 _loadingInProgress.postValue(false)
             }
             .subscribe({
-                _movieSearchState.postValue(MovieSearchState.success(it))
+                _movieSearchResult.postValue(MovieSearchResult.success(it))
             }, {
-                _movieSearchState.postValue(MovieSearchState.error())
+                _movieSearchResult.postValue(MovieSearchResult.error())
             }
             ).disposeOnCleared()
     }
 
 }
 
-enum class MovieSearchStateType {
+enum class ResultType {
     SUCCESS,
     EMPTY,
     ERROR
 }
 
-class MovieSearchState private constructor(
-        val movieSearchStateType: MovieSearchStateType,
-        val movieList: List<Movie> = listOf()
-) {
+class MovieSearchResult private constructor(val type: ResultType, val movieList: List<Movie> = listOf()) {
     companion object {
-        private val emptySearchResultState = MovieSearchState(MovieSearchStateType.EMPTY)
-        private val errorSearchResultState = MovieSearchState(MovieSearchStateType.ERROR)
+        private val emptySearchResult = MovieSearchResult(ResultType.EMPTY)
+        private val errorSearchResult = MovieSearchResult(ResultType.ERROR)
 
-        fun success(movieList: List<Movie>): MovieSearchState {
+        fun success(movieList: List<Movie>): MovieSearchResult {
             return if (movieList.any())
-                MovieSearchState(MovieSearchStateType.SUCCESS, movieList)
+                MovieSearchResult(ResultType.SUCCESS, movieList)
             else
-                emptySearchResultState
+                emptySearchResult
         }
 
-        fun error() = errorSearchResultState
+        fun error() = errorSearchResult
     }
 }
